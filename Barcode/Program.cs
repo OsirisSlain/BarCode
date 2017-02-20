@@ -6,8 +6,9 @@ namespace Barcode
     {
         static void Main()
         {
-            var testUpc = new UpcA().Generate("045496891979");
-            testUpc.Save("test.png", ImageFormat.Png);
+            var binaryBars = new UpcA().Generate("045496891978");
+            var image = new ImageBuilder().BuildBarcode(binaryBars);
+            image.Save("test.png", ImageFormat.Png);
         }
     }
 }

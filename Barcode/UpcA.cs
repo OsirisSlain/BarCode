@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace Barcode
 {
-    class UpcA : IBarcode
+    class UpcA
     {
-        static readonly double InversePhi = 2 / (1 + Math.Sqrt(5));
-
         private const string Guard = "101";
         private const string Middle = "01010";
 
@@ -21,42 +17,16 @@ namespace Barcode
             "1001110", "1010000", "1000100", "1001000", "1110100"
         };
 
-        public Bitmap Generate(string upc, int scale = 4, int quietSize = 12)
+        public string Generate(string upc)
         {
             var cleanUpc = upc.Replace("-", "").Replace(" ", "");
             if (!cleanUpc.IsValidUpcA())
                 Console.WriteLine("Warning: This is not a valid UPC-A!");
 
-            var quiet = new string('0', quietSize);
+            var quiet = new string('0', 10);
             var leftDigits = cleanUpc.Take(6).Select(x => x - '0').GenerateBars(LeftEncoding);
             var rightDigits = cleanUpc.Skip(6).Select(x => x - '0').GenerateBars(RightEncoding);
-            var fullCode = quiet + Guard + leftDigits + Middle + rightDigits + Guard + quiet;
-
-            int width = fullCode.Length * scale;
-            int height = (int)(width * InversePhi);
-            int margin = (int)(quietSize * scale * InversePhi);
-
-            var barcode = new Bitmap(width, height);
-            for (int x = 0; x < width; x++)
-            {
-                var color = fullCode[x / scale] == '0' ? Color.White : Color.Black;
-                for (int y = 0; y < height; y++)
-                {
-                    if (y < margin || y > (height - margin))
-                        barcode.SetPixel(x, y, Color.White);
-                    else
-                        barcode.SetPixel(x, y, color);
-                }
-            }
-            return barcode;
-        }
-    }
-
-    static class UpcAExtensions
-    {
-        public static string GenerateBars(this IEnumerable<int> digits, string[] encoding)
-        {
-            return string.Join("", digits.Select(x => encoding[x]));
+            return quiet + Guard + leftDigits + Middle + rightDigits + Guard + quiet;
         }
     }
 }
