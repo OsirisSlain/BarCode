@@ -4,10 +4,10 @@ namespace Barcode
 {
     static class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            var wat = UpcA.GenerateUpcA("045496891978");
-            wat.Save("test.png", ImageFormat.Png);
+            var testUpc = UpcA.GenerateUpcA("045496891979");
+            testUpc.Save("test.png", ImageFormat.Png);
         }
     }
 }

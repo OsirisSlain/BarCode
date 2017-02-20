@@ -36,19 +36,19 @@ namespace Barcode
             int height = (int)(width * InversePhi);
             int margin = (int)(quietSize * scale * InversePhi);
 
-            var bars = new Bitmap(width, height);
+            var barcode = new Bitmap(width, height);
             for (int x = 0; x < width; x++)
             {
                 var color = fullCode[x / scale] == '0' ? Color.White : Color.Black;
                 for (int y = 0; y < height; y++)
                 {
                     if (y < margin || y > (height - margin))
-                        bars.SetPixel(x, y, Color.White);
+                        barcode.SetPixel(x, y, Color.White);
                     else
-                        bars.SetPixel(x, y, color);
+                        barcode.SetPixel(x, y, color);
                 }
             }
-            return bars;
+            return barcode;
         }
 
         private static string GenerateBars(this IEnumerable<int> digits, string[] encoding)
