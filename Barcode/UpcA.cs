@@ -24,10 +24,12 @@ namespace Barcode
         public static Bitmap GenerateUpcA(string upc, int scale = 4, int quietSize = 12)
         {
             var cleanUpc = upc.Replace("-", "").Replace(" ", "");
+            if (!cleanUpc.IsValidUpcA())
+                Console.WriteLine("Warning: This is not a valid UPC-A!");
 
             var quiet = new string('0', quietSize);
-            var leftDigits = cleanUpc.Take(6).Select(x => x - '0').GenerateBarString(LeftEncoding);
-            var rightDigits = cleanUpc.Skip(6).Select(x => x - '0').GenerateBarString(RightEncoding);
+            var leftDigits = cleanUpc.Take(6).Select(x => x - '0').GenerateBars(LeftEncoding);
+            var rightDigits = cleanUpc.Skip(6).Select(x => x - '0').GenerateBars(RightEncoding);
             var fullCode = quiet + Guard + leftDigits + Middle + rightDigits + Guard + quiet;
 
             int width = fullCode.Length * scale;
@@ -37,11 +39,11 @@ namespace Barcode
             var bars = new Bitmap(width, height);
             for (int x = 0; x < width; x++)
             {
-                var color = fullCode[x/scale] == '0' ? Color.White : Color.Black;
+                var color = fullCode[x / scale] == '0' ? Color.White : Color.Black;
                 for (int y = 0; y < height; y++)
                 {
                     if (y < margin || y > (height - margin))
-                        bars.SetPixel(x,y,Color.White);
+                        bars.SetPixel(x, y, Color.White);
                     else
                         bars.SetPixel(x, y, color);
                 }
@@ -49,7 +51,7 @@ namespace Barcode
             return bars;
         }
 
-        private static string GenerateBarString(this IEnumerable<int> digits, string[] encoding)
+        private static string GenerateBars(this IEnumerable<int> digits, string[] encoding)
         {
             return string.Join("", digits.Select(x => encoding[x]));
         }
