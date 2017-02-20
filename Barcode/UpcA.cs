@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Barcode
 {
-    static class UpcA
+    class UpcA : IBarcode
     {
         static readonly double InversePhi = 2 / (1 + Math.Sqrt(5));
 
@@ -21,7 +21,7 @@ namespace Barcode
             "1001110", "1010000", "1000100", "1001000", "1110100"
         };
 
-        public static Bitmap GenerateUpcA(string upc, int scale = 4, int quietSize = 12)
+        public Bitmap Generate(string upc, int scale = 4, int quietSize = 12)
         {
             var cleanUpc = upc.Replace("-", "").Replace(" ", "");
             if (!cleanUpc.IsValidUpcA())
@@ -50,8 +50,11 @@ namespace Barcode
             }
             return barcode;
         }
+    }
 
-        private static string GenerateBars(this IEnumerable<int> digits, string[] encoding)
+    static class UpcAExtensions
+    {
+        public static string GenerateBars(this IEnumerable<int> digits, string[] encoding)
         {
             return string.Join("", digits.Select(x => encoding[x]));
         }
