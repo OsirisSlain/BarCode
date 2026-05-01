@@ -1,13 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
+namespace Barcode;
 
-namespace Barcode
+public static class Extensions
 {
-    static class Extensions
-    {
-        public static string GenerateBars(this IEnumerable<int> digits, string[] encoding)
-        {
-            return string.Join("", digits.Select(x => encoding[x]));
-        }
-    }
+	public static string GenerateBars(this IEnumerable<int> digits, string[] encoding) =>
+		string.Join("", digits.Select(x => encoding[x]));
 }
